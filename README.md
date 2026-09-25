@@ -87,29 +87,45 @@ Accept / Reject
 ## Architecture
 
 ``` text
-+-----------------------------+
-|       Next.js Frontend      |
-| React + Tailwind CSS        |
-+--------------+--------------+
-               |
-               | REST API
-               v
-+-----------------------------+
-|      Node.js Backend        |
-| Express.js                  |
-| Workflow / DAG Logic        |
-| Gemini Integration          |
-+--------------+--------------+
-               |
-               | SQL
-               v
-+-----------------------------+
-|           MySQL             |
-| Projects                    |
-| Tasks                       |
-| Dependencies                |
-| AI Suggestions              |
-+-----------------------------+
+                         TASKFLOW PRO
+                              │
+              ┌───────────────┼───────────────┐
+              │               │               │
+              ▼               ▼               ▼
+        PROJECTS           TASK BOARD     DEPENDENCIES
+              │               │               │
+              │               │               ▼
+              │               │          Dependency Graph
+              │               │               │
+              └───────────────┼───────────────┘
+                              │
+                         REST API
+                              │
+                              ▼
+                    Node.js + Express
+                              │
+          ┌───────────────────┼───────────────────┐
+          │                   │                   │
+          ▼                   ▼                   ▼
+     Task Service        DAG Engine          AI Service
+          │                   │                   │
+          │          ┌────────┼────────┐          │
+          │          │        │        │          ▼
+          │       Cycle     READY   Schedule   Gemini API
+          │       Check    /BLOCKED Propagation
+          │          │        │        │
+          └──────────┴────────┴────────┘
+                              │
+                              ▼
+                         MySQL Database
+                              │
+              ┌───────────────┼───────────────┐
+              │               │               │
+              ▼               ▼               ▼
+           Projects          Tasks       Dependencies
+                                              │
+                                              ▼
+                                       AI Suggestions
 ```
 
 ## Technology Stack
